@@ -1,0 +1,21 @@
+{
+  "name": "js13k-gamut-shift",
+  "version": "0.0.1",
+  "license": "MIT",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "fix": "biome check --write --unsafe .",
+    "lint": "biome check .",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "js13k-vite-plugins": "0.3.6",
+    "terser": "5.39.0",
+    "typescript": "5.8.3",
+    "vite": "6.3.3"
+  }
+}

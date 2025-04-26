@@ -1,7 +1,8 @@
-import { resX, resY } from './context.js'
-const preamble = `#version 300 es\nprecision highp float;precision highp sampler2D;precision highp sampler2DArray;const vec2 res = vec2(${resX},${resY});`
+import { resX, resY } from './context';
 
-const defaultVertex = `${preamble}
+export const preamble = `#version 300 es\nprecision highp float;precision highp sampler2D;precision highp sampler2DArray;const vec2 res = vec2(${resX},${resY});`;
+
+export const defaultVertex = `${preamble}
 layout(location=0) in vec2 vp;
 layout(location=1) in vec2 tc;
 out vec2 uv;
@@ -10,9 +11,9 @@ void main() {
 	uv = tc;
 	gl_Position = vec4((vp / res) * 2. - 1., 0., 1.);
 }
-`
+`;
 
-const aoFragment = `${preamble}
+export const aoFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex;
@@ -20,9 +21,9 @@ uniform sampler2D tex;
 void main() {
 	col = texture(tex, uv).aaaa;
 }
-`
+`;
 
-const tileVertex = `${preamble}
+export const tileVertex = `${preamble}
 layout(location=0) in vec2 vp;
 layout(location=1) in vec2 tc;
 layout(location=2) in vec3 tile;
@@ -34,9 +35,9 @@ void main() {
 	vec2 p = ((vp + tile.xy - scroll) / res) * 2. - 1.;
 	gl_Position = vec4(p, 0., 1.);
 }
-`
+`;
 
-const tileFragment = `${preamble}
+export const tileFragment = `${preamble}
 layout(location=1) out vec4 norm;
 layout(location=0) out vec4 col;
 in vec3 uv;
@@ -46,9 +47,9 @@ void main() {
 	col = texture(tex, uv);
 	norm = vec4(texture(normals, uv).rgb, step(.7, col.a));
 }
-`
+`;
 
-const diffuseFragment = `${preamble}
+export const diffuseFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D bg, fg, ao;
@@ -58,9 +59,9 @@ void main() {
 	vec3 a = texture(bg, uv).rgb * (1. - texture(ao, uv).r * vec3(1. ,.9, .8));
 	col = vec4(mix(a, f.rgb, f.a), 1.);
 }
-`
+`;
 
-const blurFragment = `${preamble}
+export const blurFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex;
@@ -76,9 +77,9 @@ void main() {
 		texture(tex, vec2(uv + 2. * dir)) +
 		texture(tex, vec2(uv + 3. * dir)) +
 		texture(tex, vec2(uv + 4. * dir)));
-}`
+}`;
 
-const lightVertex = `${preamble}
+export const lightVertex = `${preamble}
 layout(location=0) in vec2 vp;
 layout(location=1) in vec4 lpos;
 layout(location=2) in vec4 col;
@@ -96,9 +97,9 @@ void main() {
 
 	gl_Position = vec4(p, 0., 1.);
 }
-`
+`;
 
-const lightFragment = `${preamble}
+export const lightFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 flat in vec4 pos;
@@ -125,9 +126,9 @@ void main() {
 	vec3 normal = normalize(vec3(n.xy, sqrt(1. - dot(n.xy, n.xy))));
 	col = vec4(light(t.rgb, normal, n.z), 1.);
 }
-`
+`;
 
-const ambientFragment = `${preamble}
+export const ambientFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex, normals;
@@ -139,9 +140,9 @@ void main() {
 	vec3 normal = normalize(vec3(n.xy, sqrt(1. - dot(n.xy, n.xy))));
 	col = vec4(vec3(.2, .175, .15) * t.rgb * max(dot(normal, vec3(.5, -.5, .7)), 0.), t.a);
 }
-`
+`;
 
-const screenVertex = `${preamble}
+export const screenVertex = `${preamble}
 layout(location=0) in vec2 vp;
 layout(location=1) in vec2 tc;
 out vec2 uv;
@@ -151,16 +152,16 @@ void main() {
 	vec2 p = (vp / res) * 2. - 1.;
 	gl_Position = vec4(p * vec2(1., -1.), 0., 1.);
 }
-`
+`;
 
-const tonemap = `
+export const tonemap = `
 vec4 tm(vec4 col) {
     vec3 m = 1. - exp(-col.rgb * vec3(1.5));
 	return vec4(clamp(m, 0., 1.), 1.);
 }
-`
+`;
 
-const playerVertex = `${preamble}
+export const playerVertex = `${preamble}
 layout(location=0) in vec2 vp;
 layout(location=1) in vec2 tc;
 out vec4 uv;
@@ -173,9 +174,9 @@ void main() {
 	vec2 p = ((vp + (pos - scroll)) / res) * 2. - 1.;
 	gl_Position = vec4(p, 0., 1.);
 }
-`
+`;
 
-const playerFragment = `${preamble}
+export const playerFragment = `${preamble}
 out vec4 col;
 in vec4 uv;
 flat in vec2 offs;
@@ -188,9 +189,9 @@ void main() {
 	float a = texture(tex, uv.xyw).a;
 	col = vec4(texture(tex, vec3(p * f - offs, uv.z)).rgb * a, a);
 }
-`
+`;
 
-const screenFragment = `${preamble}
+export const screenFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex;
@@ -199,9 +200,9 @@ ${tonemap}
 void main() {
 	col = tm(texture(tex, uv));
 }
-`
+`;
 
-const transitionFragment = `${preamble}
+export const transitionFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex;
@@ -223,9 +224,9 @@ void main() {
 	vec4 t = clamp(vec4(r, g, b, 1. - d) * (1. + 400. * aber), 0., 1.);
 	col = tm(mix(p, t, d));
 }
-`
+`;
 
-const rippleFragment = `${preamble}
+export const rippleFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex;
@@ -240,9 +241,9 @@ void main() {
 	vec4 t = texture(tex, uv * dist) * 2.;
 	col = tm(mix(t, p, d));
 }
-`
+`;
 
-const rewindFragment = `${preamble}
+export const rewindFragment = `${preamble}
 out vec4 col;
 in vec2 uv;
 uniform sampler2D tex;
@@ -254,23 +255,4 @@ void main() {
 	vec2 d = vec2(uv.x + t * .15 * cos(time * 8. + uv.y * 8.), uv.y);
 	col = tm(texture(tex, d)) + vec4(t);
 }
-`
-
-export default {
-	defaultVertex,
-	screenVertex,
-	screenFragment,
-	aoFragment,
-	tileVertex,
-	tileFragment,
-	lightVertex,
-	lightFragment,
-	blurFragment,
-	diffuseFragment,
-	ambientFragment,
-	playerVertex,
-	playerFragment,
-	transitionFragment,
-	rippleFragment,
-	rewindFragment,
-}
+`;
