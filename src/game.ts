@@ -1,6 +1,6 @@
 import { Camera, createCamera } from './camera';
 import { LEVELS } from './levels';
-import renderer from './renderer';
+import { render, reset } from './renderer';
 import { World } from './world';
 
 const MOVEDIRS = [
@@ -21,7 +21,6 @@ export class Game {
   time = 0;
   world?: World;
   camera?: Camera;
-  renderer = renderer;
   audio: Record<string, () => void> = {};
   keyState = {
     down: false,
@@ -50,7 +49,7 @@ export class Game {
     game.level = level;
     game.world = new World(level, game.onExit, game.onColorCombine, game.onActivatePlate);
     game.camera = createCamera(game.world);
-    game.renderer.reset(game.world);
+    reset(game.world);
     game.switchState(game.states.enter);
     try {
       window.localStorage.setItem('GamutShift-save', level.toString());
@@ -112,7 +111,7 @@ export class Game {
           const camera = game.camera as Camera;
           time = Math.min(1, time + dt * 0.75);
           world.update(dt);
-          renderer.render(world, camera, 'transition', { time });
+          render(world, camera, 'transition', { time });
           if (time >= 1) {
             game.switchState(game.states.play);
           }
@@ -134,7 +133,7 @@ export class Game {
           const camera = game.camera as Camera;
           time = Math.max(0, time - dt);
           world.update(dt);
-          renderer.render(world, camera, 'transition', { time });
+          render(world, camera, 'transition', { time });
           if (time <= 0) {
             game.nextLevel();
           }
@@ -152,7 +151,7 @@ export class Game {
           game._movePlayer(dt);
           game.world?.update(dt);
           game.camera?.update(dt);
-          renderer.render(world, camera, 'screen');
+          render(world, camera, 'screen');
         },
       };
     })(),
@@ -176,7 +175,7 @@ export class Game {
           game._movePlayer(dt);
           world.update(dt);
           camera.update(dt);
-          renderer.render(world, camera, 'ripple', { x, y, time });
+          render(world, camera, 'ripple', { x, y, time });
           if (time >= 1) {
             game.switchState(game.states.play);
           }
@@ -203,7 +202,7 @@ export class Game {
             world.rewind();
           }
           camera.update(dt);
-          renderer.render(world, camera, 'rewind', { time });
+          render(world, camera, 'rewind', { time });
           if (time >= 1) {
             game.switchState(game.states.play);
           }

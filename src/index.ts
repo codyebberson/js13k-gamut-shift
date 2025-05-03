@@ -1,5 +1,6 @@
 import { genAudio } from './audio/audio';
 import { game } from './game';
+import { setTileTextures } from './renderer';
 import { genTextures } from './tex/texgen';
 
 let focus = true;
@@ -118,7 +119,7 @@ const addEventListeners = (): void => {
 };
 
 genTextures().then(([diffuse, normals]) => {
-  game.renderer.setTileTextures(diffuse, normals);
+  setTileTextures(diffuse, normals);
 
   genAudio(game.audio).then(() => {
     let hasSave = false;

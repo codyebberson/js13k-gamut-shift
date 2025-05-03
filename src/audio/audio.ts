@@ -1,9 +1,9 @@
-import combine from './combine';
-import enter from './enter';
-import exit from './exit';
-import music from './music';
-import norewind from './norewind';
-import rewind from './rewind';
+import { combine } from './combine';
+import { enter } from './enter';
+import { exit } from './exit';
+import { music } from './music';
+import { norewind } from './norewind';
+import { rewind } from './rewind';
 import { Player } from './soundbox';
 
 const ENABLED = true;

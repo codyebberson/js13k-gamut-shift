@@ -5,7 +5,7 @@
 // use it in a demo.
 
 // Song data
-export default {
+export const norewind = {
   songData: [
     {
       // Instrument 0

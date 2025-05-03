@@ -132,7 +132,7 @@ const renderBuffer = Framebuffer([createTexture(resX, resY)]);
 let diffuseArray: WebGLTexture;
 let normalsArray: WebGLTexture;
 
-const setTileTextures = (diffuse: ImageData[], normals: ImageData[]): void => {
+export const setTileTextures = (diffuse: ImageData[], normals: ImageData[]): void => {
   diffuseArray = createTextureArray(diffuse);
   normalsArray = createTextureArray(normals);
 };
@@ -144,7 +144,7 @@ let shaders: Record<string, WebGLProgram>;
 const screenQuad = makeQuad(resX, resY);
 const playerQuad = makeQuad(64, 64);
 
-const reset = (world: World): void => {
+export const reset = (world: World): void => {
   if (bgGeom) {
     bgGeom.release();
     fgGeom.release();
@@ -250,7 +250,7 @@ const renderAO = (): void => {
   gl.viewport(0, 0, resX, resY);
 };
 
-const render = (
+export const render = (
   world: World,
   cam: Camera,
   shader: string,
@@ -386,10 +386,4 @@ const render = (
   gl.bindTexture(gl.TEXTURE_2D, renderBuffer.textures[0]);
 
   screenQuad();
-};
-
-export default {
-  reset,
-  setTileTextures,
-  render,
 };
